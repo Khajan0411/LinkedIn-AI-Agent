@@ -1,6 +1,4 @@
-
 import requests
-from datetime import datetime
 from Oauth import auth, headers
 from phidata import main
 
@@ -19,25 +17,27 @@ def user_info(headers):
 
 # Get user id to make a UGC post
 user_info = user_info(headers)
+print(user_info)
 urn = user_info['sub']
 
-# UGC will replace shares over time.
+# LinkedIn UGC Post API endpoint
 api_url = 'https://api.linkedin.com/v2/ugcPosts'
 author = f'urn:li:person:{urn}'
 
-# Custom message you want to post
+# Get the rewritten news content
 message = main()
 message = message['news_content']
 
+# Post data to be sent to LinkedIn
 post_data = {
     "author": author,
     "lifecycleState": "PUBLISHED",
     "specificContent": {
         "com.linkedin.ugc.ShareContent": {
             "shareCommentary": {
-                "text": message  # The custom message you want to post
+                "text": message  # The rewritten news content
             },
-            "shareMediaCategory": "NONE"  # Add this line to resolve the 422 error
+            "shareMediaCategory": "NONE"  # No media attached
         }
     },
     "visibility": {
